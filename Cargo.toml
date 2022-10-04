@@ -1,5 +1,5 @@
 [package]
-name = "vex-spacing-calculator"
+name = "spacing-calculator"
 version = "1.0.0"
 edition = "2021"
 
