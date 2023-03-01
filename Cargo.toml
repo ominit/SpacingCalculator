@@ -1,9 +1,12 @@
 [package]
 name = "spacing-calculator"
-version = "1.0.0"
+version = "1.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-eframe = "*"
+eframe = { version = "0.21.3", features = ["persistence"] }
+image = "0.24.5"
+serde = { version = "1", features = ["derive"] }
+self_update = { version = "0.36.0", features = ["archive-zip", "compression-zip-deflate", "rustls"] }
