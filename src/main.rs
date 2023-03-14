@@ -66,6 +66,7 @@ impl Default for SpacingCalculatorApp {
         spacer_list.push(Spacer { name: "Large Black".to_string(), size: 0.315, used: true });
         spacer_list.push(Spacer { name: "Thick Steel".to_string(), size: 0.0392, used: true });
         spacer_list.push(Spacer { name: "Thin Steel".to_string(), size: 0.0215, used: true });
+        spacer_list.sort_by(|a, b| b.size.total_cmp(&a.size));
 
         SpacingCalculatorApp {
             input: String::default(),
@@ -124,7 +125,6 @@ enum Page {
 
 fn main_page(app: &mut SpacingCalculatorApp, ctx: &egui::Context) {
     egui::CentralPanel::default().show(ctx, |ui| {
-        app.spacers.sort_by(|a, b| b.size.total_cmp(&a.size));
         ui.with_layout(egui::Layout::left_to_right(egui::Align::Min), |ui| {
             ui.add(egui::TextEdit::singleline(&mut app.input).hint_text("Spacing"));
             
@@ -175,8 +175,31 @@ fn main_page(app: &mut SpacingCalculatorApp, ctx: &egui::Context) {
         }
         ui.separator();
         ui.collapsing("Spacers", |ui| {
+            let mut j: usize = 0;
+            let mut checkboxes = vec![];
             for i in &mut app.spacers {
-                ui.checkbox(&mut i.used, i.size.to_string() + " " + &i.name.to_string());
+                checkboxes.push(ui.checkbox(&mut i.used, i.size.to_string() + " " + &i.name.to_string()));
+            }
+            for i in checkboxes {
+                if i.context_menu(|ui| {
+                    ui.add(egui::TextEdit::singleline(&mut app.spacers.get_mut(j).unwrap().name).hint_text("Name"));
+                    let mut size_str = app.spacers.get(j).unwrap().size.to_string();
+                    let size_edit = ui.add(egui::TextEdit::singleline(&mut size_str).hint_text("Size"));
+                    if size_edit.lost_focus() {
+                        ui.close_menu();
+                        app.spacers.sort_by(|a, b| b.size.total_cmp(&a.size));
+                    } else if size_edit.changed() && size_str.parse::<f64>().is_ok(){
+                        app.spacers.get_mut(j).unwrap().size = size_str.parse::<f64>().unwrap();
+                    }
+                    if ui.button("Delete").clicked() {
+                        ui.close_menu();
+                        app.spacers.swap_remove(j);
+                        app.spacers.sort_by(|a, b| b.size.total_cmp(&a.size));
+                    }
+                }).clicked_elsewhere() {
+                    app.spacers.sort_by(|a, b| b.size.total_cmp(&a.size));
+                }
+                j+=1;
             }
         });
         ui.collapsing("Add Spacer", |ui| {
@@ -184,6 +207,7 @@ fn main_page(app: &mut SpacingCalculatorApp, ctx: &egui::Context) {
             ui.add(egui::TextEdit::singleline(&mut app.temp_size).hint_text("Size"));
             if ui.button("Add Spacer").is_pointer_button_down_on() && !app.temp_name.is_empty() && !app.temp_size.is_empty() && app.temp_size.parse::<f64>().is_ok()  {
                 app.spacers.push(Spacer { name: app.temp_name.to_string(), size: app.temp_size.parse().unwrap(), used: true });
+                app.spacers.sort_by(|a, b| b.size.total_cmp(&a.size));
                 app.temp_name = Default::default();
                 app.temp_size = Default::default();
             }
