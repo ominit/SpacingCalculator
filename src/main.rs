@@ -6,7 +6,7 @@ use self_update::cargo_crate_version;
 
 fn update_app() -> Result<(), Box<dyn ::std::error::Error>> {
     let status = self_update::backends::github::Update::configure()
-        .repo_owner("TheAngryPerson")
+        .repo_owner("ominit")
         .repo_name("SpacingCalculator")
         .bin_name(if cfg!(windows) {"SpacingCalculator.exe"} else {"SpacingCalculator"} )
         .no_confirm(true)
