@@ -8,7 +8,7 @@ fn update_app() -> Result<(), Box<dyn ::std::error::Error>> {
     let status = self_update::backends::github::Update::configure()
         .repo_owner("ominit")
         .repo_name("SpacingCalculator")
-        .bin_name(if cfg!(windows) {"SpacingCalculator.exe"} else {"SpacingCalculator"} )
+        .bin_name(if cfg!(windows) {"spacing-calculator.exe"} else {"spacing-calculator"} )
         .no_confirm(true)
         .show_output(false)
         .show_download_progress(true)
