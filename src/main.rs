@@ -28,7 +28,7 @@ fn main() {
     let mut options = eframe::NativeOptions::default();
 
     let path = concat!(env!("CARGO_MANIFEST_DIR"), "/src/spacer.png");
-    let rgb: Vec<u8> = image::open(path).unwrap_or_default().into_bytes();
+    let rgb: Vec<u8> = image::open(path).unwrap().into_bytes();
     options.icon_data = Option::<IconData>::Some(IconData { rgba: rgb, width: 1885, height: 1885 });
 
     if let Err(e) = eframe::run_native(
@@ -127,7 +127,7 @@ fn main_page(app: &mut SpacingCalculatorApp, ctx: &egui::Context) {
     egui::CentralPanel::default().show(ctx, |ui| {
         ui.with_layout(egui::Layout::left_to_right(egui::Align::Min), |ui| {
             ui.add(egui::TextEdit::singleline(&mut app.input).hint_text("Spacing"));
-            
+
             ui.with_layout(egui::Layout::right_to_left(egui::Align::Min), |ui| if ui.button("\u{2699}").clicked() {
                 app.current_page = Page::SETTINGS;
             });
@@ -224,7 +224,7 @@ fn settings_page(app: &mut SpacingCalculatorApp, ctx: &egui::Context, _frame: &m
             });
         });
         ui.separator();
-        
+
         if ui.button("Reset").clicked() {reset(app);}
     });
 }
