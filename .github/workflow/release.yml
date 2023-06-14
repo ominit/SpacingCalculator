@@ -29,11 +29,11 @@ jobs:
         run: |
           cargo install default-target
           mkdir assets
-          FILENAME=workflowtest-${{github.event.release.tag_name}}-$(default-target)
-          mv target/release/workflowtest assets
+          FILENAME=spacing-calculator-${{github.event.release.tag_name}}-$(default-target)
+          mv target/release/spacing-calculator assets
           cd assets
-          tar --format=ustar -czf $FILENAME.tar.gz workflowtest
-          rm workflowtest
+          tar --format=ustar -czf $FILENAME.tar.gz spacing-calculator
+          rm spacing-calculator
           ls .
         if: ${{ matrix.platform != 'windows-latest' }}
         shell: bash
@@ -41,11 +41,11 @@ jobs:
         run: |
           cargo install default-target
           mkdir assets
-          FILENAME=workflowtest-${{github.event.release.tag_name}}-$(default-target)
-          mv target/release/workflowtest.exe assets/workflowtest.exe
+          FILENAME=spacing-calculator-${{github.event.release.tag_name}}-$(default-target)
+          mv target/release/spacing-calculator.exe assets/spacing-calculator.exe
           cd assets
           powershell Compress-Archive -Path * -Destination ${FILENAME}.zip
-          rm workflowtest.exe
+          rm spacing-calculator.exe
           ls .
         if: ${{ matrix.platform == 'windows-latest' }}
         shell: bash
@@ -76,11 +76,11 @@ jobs:
       - name: Rename Release
         run: |
           mkdir assets
-          FILENAME=workflowtest-${{github.event.release.tag_name}}-${{matrix.target}}
-          mv target/${{matrix.target}}/release/workflowtest assets
+          FILENAME=spacing-calculator-${{github.event.release.tag_name}}-${{matrix.target}}
+          mv target/${{matrix.target}}/release/spacing-calculator assets
           cd assets
-          tar --format=ustar -czf $FILENAME.tar.gz workflowtest
-          rm workflowtest
+          tar --format=ustar -czf $FILENAME.tar.gz spacing-calculator
+          rm spacing-calculator
           ls .
       - name: Release
         uses: softprops/action-gh-release@v1
